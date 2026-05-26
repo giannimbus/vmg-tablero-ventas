@@ -42,7 +42,7 @@ function useECharts(option, deps, onEvents) {
 }
 
 /* ───────────────────── Sparkline (KPI cards) ───────────────────── */
-function Sparkline({ series, highlightLast, height = 50 }) {
+function Sparkline({ series, highlightLast, highlightIndex, height = 50, onPick }) {
   const option = useMemo(() => ({
     grid: { left: 4, right: 12, top: 6, bottom: 14 },
     xAxis: {
@@ -70,9 +70,17 @@ function Sparkline({ series, highlightLast, height = 50 }) {
       data: series.map((s) => s.total),
       smooth: 0.25,
       symbol: 'circle',
-      symbolSize: (val, p) => (highlightLast && p.dataIndex === series.length - 1 ? 7 : 4),
+      symbolSize: (val, p) => {
+        if (highlightIndex != null && p.dataIndex === highlightIndex) return 9;
+        if (highlightLast && p.dataIndex === series.length - 1) return 7;
+        return 4;
+      },
       itemStyle: {
-        color: (p) => (highlightLast && p.dataIndex === series.length - 1 ? '#D85A30' : '#0C447C'),
+        color: (p) => {
+          if (highlightIndex != null && p.dataIndex === highlightIndex) return '#D85A30';
+          if (highlightLast && p.dataIndex === series.length - 1) return '#D85A30';
+          return '#0C447C';
+        },
         borderColor: '#fff',
         borderWidth: 1.5,
       },
@@ -86,9 +94,11 @@ function Sparkline({ series, highlightLast, height = 50 }) {
       animationDuration: 600,
       emphasis: { scale: 1.6 },
     }],
-  }), [series, highlightLast]);
-  const ref = useECharts(option, [series]);
-  return <div className="kpi-chart" ref={ref} style={{ height }} />;
+  }), [series, highlightLast, highlightIndex]);
+  const ref = useECharts(option, [series, highlightIndex], (e) => {
+    if (onPick && e.dataIndex != null) onPick(series[e.dataIndex].mes);
+  });
+  return <div className="kpi-chart" ref={ref} style={{ height, cursor: onPick ? 'pointer' : 'default' }} />;
 }
 
 /* ───────────────────── Top products bar chart ───────────────────── */

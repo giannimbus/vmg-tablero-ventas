@@ -245,7 +245,10 @@ button { font-family: inherit; cursor: pointer; }
   flex-direction: column;
   gap: 2px;
   min-height: 140px;
+  transition: border-color 120ms ease, background 120ms ease;
 }
+.kpi.clickable { cursor: pointer; }
+.kpi.clickable:hover { border-color: #BCD4EE; background: #FCFDFF; }
 .kpi-label {
   font-size: 11px;
   color: var(--c-text-3);
@@ -386,12 +389,43 @@ table.detail tbody td {
 }
 table.detail tbody tr { transition: background 100ms; }
 table.detail tbody tr:hover { background: var(--c-row-hover); }
+table.detail tbody tr.clickable { cursor: pointer; }
+table.detail tbody tr.active { background: #F1F6FC; }
+table.detail tbody tr.active:hover { background: #E6EFFA; }
 .col-num { text-align: right; font-variant-numeric: tabular-nums; }
 .col-cliente {
   max-width: 280px;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+}
+
+/* clickable cell chips (artículo, provincia) for cross-filtering from the table */
+.cell-chip {
+  background: transparent;
+  border: 1px solid transparent;
+  border-radius: 4px;
+  padding: 2px 6px;
+  font: inherit;
+  font-variant-numeric: tabular-nums;
+  color: #185FA5;
+  font-weight: 500;
+  cursor: pointer;
+  margin: -2px -6px;
+  transition: background 100ms, border-color 100ms, color 100ms;
+}
+.cell-chip:hover { background: #E6EFFA; }
+.cell-chip.neutral { color: #1A1A1A; font-weight: 400; }
+.cell-chip.neutral:hover { background: var(--c-chip-bg); }
+.cell-chip.on {
+  background: var(--c-blue-bg);
+  border-color: #BCD4EE;
+  color: var(--c-blue-1);
+}
+.cell-chip.neutral.on {
+  background: var(--c-blue-bg);
+  border-color: #BCD4EE;
+  color: var(--c-blue-1);
 }
 .var-neg { color: var(--c-red); font-weight: 500; }
 .var-pos { color: var(--c-green); font-weight: 500; }
